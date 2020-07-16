@@ -8,6 +8,7 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
+    "typeRoots": ["node_modules/@types", "src/@typings.d.ts"],
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
