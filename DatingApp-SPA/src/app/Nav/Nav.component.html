@@ -1,32 +1,38 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Dating App</a>
+<style>
+  .red { color: #FF0000; font-weight: bold;} /* CSS link color */
+</style>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+
+  <div class="container">
+
+  <a class="navbar-brand" [routerLink]="['/home']">Dating App</a>
 
 
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Matches</a>
+    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/members']">Matches</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Lists</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/lists']">Lists</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Messages</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" (click)="logout()">Logout</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/messages']">Messages</a>
       </li>
     </ul>
-
-    <div *ngIf="loggedIn()" class="dropdown">
-      <a class="dropdown-toggle text-light">
-        Welcome User
-      </a>
     
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="#"><i class="fa fa-user"></i>Edit profile</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#"><i class="fa fa-sign-out"></i></a>
-      </div>
+    <div *ngIf="loggedIn()" class="btn-group" dropdown>
+      <button id="button-animated" dropdownToggle type="button" class="btn btn-secondary dropdown-toggle"
+              aria-controls="dropdown-animated">
+              <a class="red">
+              Welcome {{ authService.decodedToken.unique_name | titlecase }} <span class="caret red"></span></a>
+      </button>
+      <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
+          role="menu" aria-labelledby="button-animated">
+        <li role="menuitem"><a class="dropdown-item" href="#">Edit Profile</a></li>
+        <li role="menuitem"><a class="dropdown-item" href="#" (click)="logout()">Logout</a>
+        </li>
+      </ul>
     </div>
 
     <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
@@ -36,5 +42,5 @@
       <!-- #password="ngModel" to expose this field as a variable-->
       <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
     </form>
-
+  </div>
 </nav>
