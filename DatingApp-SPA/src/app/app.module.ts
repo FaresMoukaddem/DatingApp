@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@Angular/forms';
@@ -15,12 +15,32 @@ import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MemberListComponent } from './MemberList/MemberList.component';
+import { MemberListComponent } from './members/MemberList/MemberList.component';
 import { MessagesComponent } from './Messages/Messages.component';
 import { ListsComponent } from './Lists/Lists.component';
 
 import { appRoutes } from './routes';
+
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+
+import { MemberDetailResolver } from './_resolvers/member-details.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+
+import { JwtModule } from '@auth0/angular-jwt';
+
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+
+export function tokenGetter()
+{
+   return localStorage.getItem('token');
+}
 
 @NgModule({
    declarations: [
@@ -31,19 +51,37 @@ import { appRoutes } from './routes';
       RegisterComponent,
       MemberListComponent,
       MessagesComponent,
-      ListsComponent
+      ListsComponent,
+      MemberCardComponent,
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
       HttpClientModule,
       FormsModule,
       BsDropdownModule.forRoot(),
+      TabsModule.forRoot(),
       BrowserAnimationsModule,
-      RouterModule.forRoot(appRoutes)
+      RouterModule.forRoot(appRoutes),
+      NgxGalleryModule,
+      JwtModule.forRoot(
+         {
+            config:
+            {
+               tokenGetter: tokenGetter,
+               allowedDomains:['localhost:5000'],
+               disallowedRoutes:['localhost:5000/api/auth']
+            }
+         })
    ],
    providers: [
       AuthService,
-      ErrorInterceptorProvider
+      ErrorInterceptorProvider,
+      MemberDetailResolver,
+      MemberListResolver,
+      MemberEditResolver,
+      PreventUnsavedChanges
    ],
    bootstrap: [
       AppComponent
