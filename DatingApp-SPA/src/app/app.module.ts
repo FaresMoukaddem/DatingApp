@@ -1,14 +1,14 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@Angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@Angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { BookComponent } from './book/book.component';
 import { NavComponent } from './Nav/Nav.component';
 
-import { AuthService } from './_services/auth.service'
+import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -16,6 +16,7 @@ import { ErrorInterceptorProvider } from './_services/error.interceptor';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { BsDatepickerModule  } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberListComponent } from './members/MemberList/MemberList.component';
 import { MessagesComponent } from './Messages/Messages.component';
@@ -37,6 +38,9 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { FileUploadModule } from 'ng2-file-upload';
+
 export function tokenGetter()
 {
    return localStorage.getItem('token');
@@ -54,17 +58,22 @@ export function tokenGetter()
       ListsComponent,
       MemberCardComponent,
       MemberDetailComponent,
-      MemberEditComponent
+      MemberEditComponent,
+      PhotoEditorComponent
    ],
    imports: [
       BrowserModule,
+      BrowserAnimationsModule,
       HttpClientModule,
       FormsModule,
+      ReactiveFormsModule,
       BsDropdownModule.forRoot(),
+      BsDatepickerModule.forRoot(),
       TabsModule.forRoot(),
       BrowserAnimationsModule,
       RouterModule.forRoot(appRoutes),
       NgxGalleryModule,
+      FileUploadModule,
       JwtModule.forRoot(
          {
             config:

@@ -22,11 +22,17 @@
     </ul>
     
     <div *ngIf="loggedIn()" class="btn-group" dropdown>
-      <button id="button-animated" dropdownToggle type="button" class="btn btn-secondary dropdown-toggle"
+
+      <span>
+        <img src="{{photoUrl || '../../assets/user.png'}}" alt="">
+      
+
+      <button style="margin-left: 10px;" id="button-animated" dropdownToggle type="button" class="btn btn-secondary dropdown-toggle"
               aria-controls="dropdown-animated">
               <a class="red">
               Welcome {{ authService.decodedToken.unique_name | titlecase }} <span class="caret red"></span></a>
       </button>
+    </span>
       <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
           role="menu" aria-labelledby="button-animated">
         <li role="menuitem"><a class="dropdown-item" [routerLink]="['/member/edit']" >Edit Profile</a></li>

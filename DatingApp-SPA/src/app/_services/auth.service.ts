@@ -3,9 +3,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
 
+import { BehaviorSubject } from 'rxjs';
+
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { environment } from '../../environments/environment';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,18 @@ export class AuthService {
 
   decodedToken: any;
 
+  currentUser: User;
+
+  photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+
+  currentPhotoUrl = this.photoUrl.asObservable();
+
   constructor(private http: HttpClient) { }
+
+  changeMemberPhoto(photoUrl: string)
+  {
+    this.photoUrl.next(photoUrl);
+  }
 
   login(model: any)
   {
@@ -41,17 +55,20 @@ export class AuthService {
       map((response: any) => 
       {
         const resp = response;
-        if(resp)
+        if (resp)
         {
           localStorage.setItem('token', resp.token);
+          localStorage.setItem('user', JSON.stringify(resp.user));
           this.decodedToken = this.jwtHelper.decodeToken(resp.token);
+          this.currentUser = resp.user;
+          this.changeMemberPhoto(this.currentUser.photoUrl);
           console.log(this.decodedToken);
         }
       })
     );
   }
 
-  register(model: any)
+  register(user: User)
   {
     // This is optional to know how to change content-type
     //==========================================================
@@ -59,7 +76,7 @@ export class AuthService {
     header = header.append('content-type', 'application/json');
     //==========================================================
 
-    return this.http.post(this.baseUrl + "register", model, {headers : header});
+    return this.http.post(this.baseUrl + 'register', user, {headers : header});
   }
 
   loggedIn()
