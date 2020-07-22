@@ -65,6 +65,9 @@ namespace DatingApp.API
                     ValidateAudience = false // Audience being where the client is (which is localhost now)
                 };
             });
+
+            // Add scoped so it creates a new instance per request
+            services.AddScoped<LogUserActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
