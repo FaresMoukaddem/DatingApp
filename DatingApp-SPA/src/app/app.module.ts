@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { BookComponent } from './book/book.component';
 import { NavComponent } from './Nav/Nav.component';
 
+import { CommonModule } from '@angular/common';  
+
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
@@ -45,6 +47,10 @@ import { FileUploadModule } from 'ng2-file-upload';
 
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+
 
 export function tokenGetter()
 {
@@ -71,9 +77,11 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
       MemberDetailComponent,
       MemberEditComponent,
       TimeAgoExtendsPipe,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      MemberMessagesComponent
    ],
    imports: [
+      CommonModule,
       BrowserModule,
       BrowserAnimationsModule,
       HttpClientModule,
@@ -105,6 +113,7 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
       MemberListResolver,
       MemberEditResolver,
       ListsResolver,
+      MessagesResolver,
       PreventUnsavedChanges
    ],
    bootstrap: [

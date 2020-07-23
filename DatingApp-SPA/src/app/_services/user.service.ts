@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
-
+import { Message } from '../_models/message';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 
@@ -52,7 +52,7 @@ getUsers(page?, itemsPerPage?, userParmas?, likesParam?): Observable<PaginatedRe
     map(response =>
       {
         paginatedResult.result = response.body;
-        if(response.headers.get('Pagination') != null)
+        if (response.headers.get('Pagination') != null)
         {
           paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'))
         }
@@ -85,6 +85,45 @@ deltePhoto(userId: number, id: number)
 sendLike(id: number, recipientid: number)
 {
   return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientid, {});
+}
+
+getMessages(id: number, page?, itemsPerPage?, messageContainer?)
+{
+  const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<Message[]>();
+
+  let params = new HttpParams();
+
+  params = params.append('MessageContainer', messageContainer);
+
+  if (page != null && itemsPerPage != null)
+  {
+    params = params.append('pageNumber', page);
+    params = params.append('pageSize', itemsPerPage);
+  }
+
+  return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages', {observe: 'response', params})
+  .pipe(
+    map( response => {
+      paginatedResult.result = response.body;
+
+      if (response.headers.get('pagination') !== null)
+      {
+        paginatedResult.pagination = JSON.parse(response.headers.get('pagination'));
+      }
+
+      return paginatedResult;
+    })
+  );
+}
+
+getMessageThread(id: number, recipientid: number)
+{
+  return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages/thread/' + recipientid);
+}
+
+sendMessage(id: number, message: Message)
+{
+  return this.http.post(this.baseUrl + 'users/' + id + '/messages', message);
 }
 
 }
