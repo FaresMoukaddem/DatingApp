@@ -34,10 +34,31 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x =>
+            {
+                x.UseLazyLoadingProxies();
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x => 
+            {
+                x.UseLazyLoadingProxies();
+                x.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            ConfigureServices(services);
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {   
@@ -108,10 +129,26 @@ namespace DatingApp.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
+            // =============================================
+            // Production
+            // Must put built angular app in wwwroot
 
+            // This means our app will look for an index.html or a default.html file in wwwroot
+            app.UseDefaultFiles();
+
+            app.UseStaticFiles();
+            // ==============================================
+    
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // We do this to make our server go back to our angualr apps index.html
+                // whenever it doesn't know where to route, since routing logic is set in angular
+                // We create a controller of type Controller, 
+                // and we make this Index function return our angular index.html file.
+                endpoints.MapFallbackToController("Index","Fallback");
             });
         }
     }
